@@ -1,55 +1,61 @@
-const express = require('express');
+const express = require ('express');
 const routes = express.Router();
 const Usuario = require('../models/usuario');
+const { where } = require('sequelize');
 
-function createRoute(){
-    routes.post('/usuarios', async(req,res)=>{
-        console.log('Create');
-        await Usuario.create(req.body);
+function findAllRoute() {
+    routes.get('/usuarios',async(req, res) =>{
+    const users = await Usuario.findAll();
+        res.json(users);
+    });
+}
+
+function createRoute() {
+    routes.post('/usuarios', async(req, res) =>{
+        console.log('CREATE ', req.body);
+        await Usuario.create(req.body)
+        res.json();
+    });
+}
+function findByIdRoute() {
+    routes.get('/usuarios/:id', async (req, res) =>{
+        const users = await User.findAll({
+            where: {
+                id: req.params.id
+            }
+        })
         res.json([]);
-});
-    
+    });
+}
+function updateRoute() {
+    routes.put('/usuarios',async(req, res) =>{
+
+        await Usuario.update(req.body,{
+            where:{
+                id: req.body.id
+            }
+        });
+        res.json([]);
+    });
+}
+function removeRoute() {
+    routes.delete('/usuarios/:id',async(req, res) =>{
+        await Usuario.destroy({
+            where:{
+                id:req.params.id
+            }
+        });
+        res.json([]);
+    });
 }
 
-function findAllRoute(){
-    routes.get('/usuarios', (req,res)=>{
-        res.json([])
-});
-    
-}
-
-function findByIdRoute(){
-    routes.get('/usuarios/:id', (req,res)=>{
-        console.log(req.params)
-        res.json([])
-});
-    
-}
-
-function updateRoute(){
-    routes.put('/usuarios', (req,res)=>{
-        console.log(req.body)
-        res.json([])
-});
-    
-}
-
-function removeRoute(){
-    routes.delete('/usuarios/:id', (req,res)=>{
-        console.log(req.params)
-        res.json([])
-});
-    
-}
-
-
-function registerRoutes(){
+function registraUsuarioRotas(){
+    findAllRoute();
     createRoute();
+    removeRoute();
     findByIdRoute();
     updateRoute();
-    removeRoute();
-    findAllRoute();
     return routes;
 }
 
-module.exports = registerRoutes;
+ module.exports = registraUsuarioRotas;

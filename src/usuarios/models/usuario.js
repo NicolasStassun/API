@@ -21,12 +21,31 @@ Usuario.init({
         type: DataTypes.STRING,
         allowNull: false,
         unique: true
-    }
+    },
+    cardPermissions: {
+        type: DataTypes.STRING,
+        get() {
+          return JSON.parse(this.getDataValue('cardPermissions'));
+        },
+        set(value) {
+          this.setDataValue('cardPermissions', JSON.stringify(value));
+        }
+      },
+      propertiesPermissions: {
+        type: DataTypes.STRING,
+        get() {
+          return JSON.parse(this.getDataValue('propertiesPermissions'));
+        },
+        set(value) {
+          this.setDataValue('propertiesPermissions', JSON.stringify(value));
+        }
+      }
+      
 }, {
     sequelize: connection,
     modelName: 'users'
 });
 
-Usuario.sync().then(() => {console.log('Usuario sincronizado')}).catch((e) => {console.log('Usuario nao sincronizado')})
+Usuario.sync({force: true}).then(() => {console.log('Usuario sincronizado')}).catch((e) => {console.log('Usuario nao sincronizado')})
 
 module.exports = Usuario;
